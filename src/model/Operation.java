@@ -61,4 +61,10 @@ public class Operation {
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
+
+    /*-------------------Affichage---------*/
+    @Override
+    public String toString() {
+        return "Operation{" + getId() + "}\nType: " + getType() + "\nAmount: " + getAmount() +  "\nDate: " + getOperationDate() + "\nAccount: " + getAccountId();
+    }
 }
