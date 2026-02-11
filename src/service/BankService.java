@@ -34,10 +34,22 @@ public class BankService {
         return client;
     }
 
-
    /*------------------gestion comptes--------------------*/
     public List<Account> getAllAccounts(){
         return accountDao.findAll();
     }
-    
+
+    public Account findAccountByNumber(String accountNumber){
+        Account account = accountDao.findByNumber(accountNumber);
+        if (account ==null){
+            throw new AccountNotFoundException("Account not found: "+ accountNumber);
+        }
+        return account;
+    }
+
+    public double getBalance(String accountNumber){
+        Account account = findAccountByNumber(accountNumber);
+        return account.getBalance();
+    }
+
 }
