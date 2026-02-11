@@ -80,6 +80,6 @@ public abstract class Account {
     /*-------------affichage --------------*/
     @Override
     public String toString() {
-        return "Account{" + id + ", " + number + ", " + balance + ", " + clientId + ", " + createdAt + '}';
+        return "Account{" + id + "}\nNumber:" + number + "\nBalance: " + balance + "\nClient: " + clientId + "\nDate:" + createdAt;
     }
 }
