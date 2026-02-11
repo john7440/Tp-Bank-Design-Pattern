@@ -1,10 +1,7 @@
 package dao.mapping;
 
 import factory.AccountFactory;
-import model.Account;
-import model.Client;
-import model.CurrentAccount;
-import model.SavingsAccount;
+import model.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,5 +45,19 @@ public class MapResultSetHelper {
             client.setCreatedAt(timestamp.toLocalDateTime());
         }
         return client;
+    }
+
+    private Operation mapResultSetToOperation(ResultSet rs) throws SQLException {
+        Operation operation = new Operation();
+        operation.setId(rs.getLong("id"));
+        operation.setType(rs.getString("type"));
+        operation.setAmount(rs.getDouble("amount"));
+        operation.setAccountId(rs.getLong("account_id"));
+
+        Timestamp timestamp = rs.getTimestamp("created_at");
+        if (timestamp != null) {
+            operation.setOperationDate(timestamp.toLocalDateTime());
+        }
+        return operation;
     }
 }
