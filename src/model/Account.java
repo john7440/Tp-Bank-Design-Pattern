@@ -2,7 +2,7 @@ package model;
 
 import java.time.LocalDateTime;
 
-public class Account {
+public abstract class Account {
     private Long id;
     private String number;
     private Double balance;
@@ -59,5 +59,19 @@ public class Account {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    /*--------------------Méthodes---------------------*/
+
+    public void credit(double amount){
+        if (amount > 0){
+            this.balance += amount;
+        }
+    }
+
+    public void debit(double amount){
+        if (amount > 0){
+            this.balance -= amount;
+        }
     }
 }
