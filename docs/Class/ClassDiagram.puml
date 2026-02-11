@@ -1,0 +1,91 @@
+@startuml
+
+left to right direction
+
+package "Model" {
+    class Client {
+        - name: String
+        - email: String
+        - phone: String
+    }
+
+    abstract class Account {
+        - number: String
+        - balance: double
+        + credit(amount: double): void
+        + debit(amount: double): void
+    }
+
+    class CurrentAccount{
+        - overdraftLimit: double
+    }
+    class SavingsAccount{
+        - interestRate: double
+    }
+
+    class Operation {
+        - type: String
+        - amount: double
+        - date: Date
+    }
+
+    Client "1" -- "*" Account
+    Account "1" -- "*" Operation
+    CurrentAccount --|> Account
+    SavingsAccount --|> Account
+}
+package Singleton{
+    class DatabaseConnection {
+        - {static} instance: DatabaseConnection
+        + {static} getInstance(): DatabaseConnection
+        + getConnection(): Connection
+    }
+}
+
+package Factory{
+    class AccountFactory {
+        + createAccount(type: String): Account
+    }
+}
+package DAO {
+    class ClientDAO {
+        + findAll(): List<Client>
+        + findByEmail(email: String): Client
+    }
+
+    class AccountDAO {
+        + findAll(): List<Account>
+        + findById(id: Long): Account
+        + findByNumber(number: String): Account
+    }
+
+    class OperationDAO {
+        + save(operation: Operation): void
+        + findByAccount(accountId: Long): List<Operation>
+    }
+}
+
+package Service {
+    class BankService {
+        + deposit(accountNumber: String, amount: double): void
+        + withdraw(accountNumber: String, amount: double): void
+        + getAccountHistory(accountNumber: String): List<Operation>
+    }
+}
+
+class ConsoleApp {
+    + main(args: String[]): void
+}
+
+AccountFactory ..> Account
+ClientDAO ..> DatabaseConnection
+ClientDAO ..> Client
+AccountDAO ..> DatabaseConnection
+AccountDAO ..> AccountFactory
+OperationDAO ..> DatabaseConnection
+OperationDAO ..> Operation
+BankService --> AccountDAO
+BankService --> OperationDAO
+ConsoleApp --> BankService
+
+@enduml
