@@ -13,6 +13,18 @@ public class QueryBuilder {
         this.whereConditions = new ArrayList<>();
         this.orderByColumns = new ArrayList<>();
     }
-    
+
+    /*--------méthodes--------*/
+    public static QueryBuilder select(String... columns){
+        QueryBuilder builder = new QueryBuilder();
+        builder.query.append("SELECT ");
+        if (columns.length == 0){
+            builder.query.append("*");
+        } else {
+            builder.query.append(String.join(", ", columns));
+        }
+        return builder;
+    }
+
 
 }
