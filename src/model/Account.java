@@ -74,4 +74,12 @@ public abstract class Account {
             this.balance -= amount;
         }
     }
+
+    public abstract String getType();
+
+    /*-------------affichage --------------*/
+    @Override
+    public String toString() {
+        return "Account{" + id + ", " + number + ", " + balance + ", " + clientId + ", " + createdAt + '}';
+    }
 }
