@@ -5,10 +5,7 @@ import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
 import model.Operation;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +32,29 @@ public class OperationDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching all operations",e);
+        }
+        return operations;
+    }
+
+    public List<Operation> findByAccountId(long accountId) {
+        List<Operation> operations = new ArrayList<>();
+        String sql = QueryBuilder
+                .select("*")
+                .from("operations")
+                .where("account_id = ?")
+                .orderBy("operation_date DESC")
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setLong(1, accountId);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()){
+                    operations.add(helper.mapResultSetToOperation(rs))
+                }
+            }
+        } catch (SQLException e){
+            throw new RuntimeException("Error fetching operations for: "+ accountId,e);
         }
         return operations;
     }
