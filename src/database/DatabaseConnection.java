@@ -23,4 +23,32 @@ public class DatabaseConnection {
             throw new RuntimeException("Connection failed",e);
         }
     }
+
+    public static synchronized DatabaseConnection getInstance(){
+        if(instance == null){
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
+    public Connection getConnection(){
+        try{
+            if (connection == null || connection.isClosed()){
+                connection = DriverManager.getConnection(URL,USER,PASSWORD);
+            }
+        } catch (SQLException e){
+            throw new RuntimeException("Connection failed",e);
+        }
+        return connection;
+    }
+
+    public void closeConnection(){
+        try {
+            if (connection != null && !connection.isClosed()){
+                connection.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error closing connection!",e);
+        }
+    }
 }
