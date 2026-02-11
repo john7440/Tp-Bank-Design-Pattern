@@ -50,13 +50,37 @@ public class OperationDao {
 
             try (ResultSet rs = stmt.executeQuery()){
                 while (rs.next()){
-                    operations.add(helper.mapResultSetToOperation(rs))
+                    operations.add(helper.mapResultSetToOperation(rs));
                 }
             }
         } catch (SQLException e){
             throw new RuntimeException("Error fetching operations for: "+ accountId,e);
         }
         return operations;
+    }
+
+    public void save(Operation operation) {
+        String sql = QueryBuilder
+                .insert("operations")
+                .columns("type", "amount", "account_id")
+                .values(3)
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+            stmt.setString(1, operation.getType());
+            stmt.setDouble(2, operation.getAmount());
+            stmt.setLong(3, operation.getAccountId());
+
+            stmt.executeUpdate();
+
+            try (ResultSet genKeys = stmt.getGeneratedKeys()){
+                if (genKeys.next()){
+                    operation.setId(genKeys.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error saving operation",e);
+        }
     }
 
 }
