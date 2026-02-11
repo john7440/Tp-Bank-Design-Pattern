@@ -44,5 +44,17 @@ public class QueryBuilder {
         return builder;
     }
 
+    public QueryBuilder from(String table){
+        query.append("FROM ").append(table);
+        return this;
+    }
+
+    public QueryBuilder columns(String ...columns){
+        query.append(" (").append(String.join(", ", columns)).append(")");
+        return this;
+    }
+
+
+
 
 }
