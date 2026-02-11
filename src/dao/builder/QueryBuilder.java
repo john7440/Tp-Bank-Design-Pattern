@@ -54,6 +54,26 @@ public class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder values(int count){
+        query.append(" VALUES (");
+        for (int i = 0; i < count; i++){
+            query.append("?");
+            if (i < count - 1) query.append(", ");
+        }
+        query.append(")");
+        return this;
+    }
+
+    public QueryBuilder set(String... columns){
+        query.append(" SET ");
+        for (int i = 0; i < columns.length; i++){
+            query.append(columns[i]).append(" = ?");
+            if (i < columns.length - 1) query.append(", ");
+        }
+        return this;
+    }
+
+
 
 
 
