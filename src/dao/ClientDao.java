@@ -5,10 +5,7 @@ import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
 import model.Client;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +35,27 @@ public class ClientDao {
             throw new RuntimeException("Error fetching all clients",e);
         }
         return clients;
+    }
+
+    public Client findByEmail(String email) {
+        String sql = QueryBuilder
+                .select("*")
+                .from("clients")
+                .where("email = ?")
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                if (rs.next()){
+                    return helper.mapResultSetToClient(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching client by email", e);
+        }
+        return null;
     }
 
 }
