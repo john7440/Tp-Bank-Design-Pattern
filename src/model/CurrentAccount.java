@@ -28,4 +28,15 @@ public class CurrentAccount  extends Account {
     public String getType() {
         return "CURRENT";
     }
+
+    public boolean canWithdraw(double amount) {
+        return (getBalance() + overdraftLimit) >= amount;
+    }
+
+    /*--------------affichage--------------*/
+    @Override
+    public String toString() {
+        return "CuurentAccount{" + getId() +"}\nNumber:" + getNumber() + "\nBalance: " + getBalance() + "\nOverdraft Limit: " + getOverdraftLimit();
+    }
+
 }
