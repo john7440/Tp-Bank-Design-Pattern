@@ -73,8 +73,32 @@ public class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder where(String condition){
+        whereConditions.add(condition);
+        return this;
+    }
 
+    public QueryBuilder orderBy(String... columns){
+        for (String columnName : columns){
+            orderByColumns.add(columnName);
+        }
+        return this;
+    }
 
+    public String build(){
+        if (whereConditions.isEmpty()){
+            query.append(" WHERE ");
+            query.append(String.join(" AND ", whereConditions));
+        }
+        if(!orderByColumns.isEmpty()){
+            query.append(" ORDER BY ");
+            query.append(String.join(", ", orderByColumns));
+        }
+        return query.toString();
+    }
 
-
+    @Override
+    public String toString() {
+        return build();
+    }
 }
