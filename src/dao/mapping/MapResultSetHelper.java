@@ -2,6 +2,7 @@ package dao.mapping;
 
 import factory.AccountFactory;
 import model.Account;
+import model.Client;
 import model.CurrentAccount;
 import model.SavingsAccount;
 
@@ -33,5 +34,19 @@ public class MapResultSetHelper {
             account.setCreatedAt(timestamp.toLocalDateTime());
         }
         return account;
+    }
+
+    public Client mapResultSetToClient(ResultSet rs) throws SQLException {
+        Client client = new Client();
+        client.setId(rs.getLong("id"));
+        client.setName(rs.getString("name"));
+        client.setEmail(rs.getString("email"));
+        client.setPhone(rs.getString("phone"));
+
+        Timestamp timestamp = rs.getTimestamp("created_at");
+        if (timestamp != null) {
+            client.setCreatedAt(timestamp.toLocalDateTime());
+        }
+        return client;
     }
 }
