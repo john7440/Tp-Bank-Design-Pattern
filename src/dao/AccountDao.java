@@ -5,10 +5,7 @@ import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
 import model.Account;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +35,27 @@ public class AccountDao {
             throw new RuntimeException("Error fetching accounts" ,e);
         }
         return accounts;
+    }
+
+    public Account findById(long id){
+        String sql = QueryBuilder
+                .select("*")
+                .from("accounts")
+                .where("id = ?")
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setLong(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                if (rs.next()){
+                    return helper.mapResultSetToAccount(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching account by id " ,e);
+        }
+        return null;
     }
 
 
