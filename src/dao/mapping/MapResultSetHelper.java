@@ -47,7 +47,7 @@ public class MapResultSetHelper {
         return client;
     }
 
-    private Operation mapResultSetToOperation(ResultSet rs) throws SQLException {
+    public Operation mapResultSetToOperation(ResultSet rs) throws SQLException {
         Operation operation = new Operation();
         operation.setId(rs.getLong("id"));
         operation.setType(rs.getString("type"));
