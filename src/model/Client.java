@@ -60,4 +60,10 @@ public class Client {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    /*--------------affichage-------------*/
+    @Override
+    public String toString() {
+        return "Client{" + "id=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + "}";
+    }
 }
