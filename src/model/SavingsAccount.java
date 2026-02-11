@@ -21,8 +21,19 @@ public class SavingsAccount extends Account {
         this.interestRate = interestRate;
     }
 
+    /*-------------------methodes---------------------*/
     @Override
     public String getType(){
         return "SAVINGS";
+    }
+
+    public double calculateInterest(){
+        return (interestRate/100) * getBalance();
+    }
+
+    /*-----------affichage------------*/
+    @Override
+    public String toString(){
+        return "SavingAccount{" + getId()+"}\nNumber: " + getNumber() + "\nBalance: " + getBalance() + "\nInterest rate: " +  getInterestRate();
     }
 }
