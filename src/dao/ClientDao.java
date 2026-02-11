@@ -37,6 +37,27 @@ public class ClientDao {
         return clients;
     }
 
+    public Client findById(Long id){
+        String sql = QueryBuilder
+                .select("*")
+                .from("clients")
+                .where("id = ?")
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setLong(1, id);
+
+            try(ResultSet rs = stmt.executeQuery()){
+                if (rs.next()){
+                    return  helper.mapResultSetToClient(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching client by id",e);
+        }
+        return null;
+    }
+
     public Client findByEmail(String email) {
         String sql = QueryBuilder
                 .select("*")
