@@ -26,5 +26,23 @@ public class QueryBuilder {
         return builder;
     }
 
+    public static QueryBuilder insert(String table){
+        QueryBuilder builder = new QueryBuilder();
+        builder.query.append("INSERT INTO ").append(table);
+        return builder;
+    }
+
+    public static QueryBuilder update(String table){
+        QueryBuilder builder = new QueryBuilder();
+        builder.query.append("UPDATE ").append(table);
+        return builder;
+    }
+
+    public static QueryBuilder delete(){
+        QueryBuilder builder = new QueryBuilder();
+        builder.query.append("DELETE");
+        return builder;
+    }
+
 
 }
