@@ -8,4 +8,56 @@ public class Account {
     private Double balance;
     private Long clientId;
     private LocalDateTime createdAt;
+
+    /* ---------------Constructeurs------------------*/
+    public Account() {
+    }
+
+    public Account(Long id, String number, Double balance, Long clientId) {
+        this.id = id;
+        this.number = number;
+        this.balance = balance;
+        this.clientId = clientId;
+    }
+
+    /* ------Getter et setters ----------*/
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
