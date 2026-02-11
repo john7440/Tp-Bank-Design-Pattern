@@ -17,6 +17,7 @@ public class AccountDao {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
+    /*-------------------méthodes---------------------------*/
     public List<Account> findAll(){
         List<Account> accounts = new ArrayList<>();
         String sql = QueryBuilder
@@ -58,5 +59,25 @@ public class AccountDao {
         return null;
     }
 
+    public Account findByNumber(String number){
+        String sql = QueryBuilder
+                .select("*")
+                .from("accounts")
+                .where("number = ?")
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, number);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                if (rs.next()){
+                    return helper.mapResultSetToAccount(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching account by number " , e);
+        }
+        return null;
+    }
 
 }
