@@ -86,7 +86,7 @@ public class QueryBuilder {
     }
 
     public String build(){
-        if (whereConditions.isEmpty()){
+        if (!whereConditions.isEmpty()){
             query.append(" WHERE ");
             query.append(String.join(" AND ", whereConditions));
         }
