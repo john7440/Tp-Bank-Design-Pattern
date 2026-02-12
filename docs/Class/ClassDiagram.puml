@@ -1,35 +1,43 @@
-@startuml
-
-left to right direction
+@startuml TP_Bank
 
 package "Model" {
     class Client {
-        - id : Long
+        - id: Long
         - name: String
         - email: String
         - phone: String
+        - createdAt: LocalDateTime
     }
 
     abstract class Account {
         - id: Long
         - number: String
         - balance: double
+        - clientId: Long
+        - createdAt: LocalDateTime
         + credit(amount: double): void
         + debit(amount: double): void
+        + getType(): String
     }
 
-    class CurrentAccount{
+    class CurrentAccount {
         - overdraftLimit: double
+        + canWithdraw(amount: double): boolean
+        + getType(): String
     }
-    class SavingsAccount{
+
+    class SavingsAccount {
         - interestRate: double
+        + calculateInterest(): double
+        + getType(): String
     }
 
     class Operation {
         - id: Long
         - type: String
         - amount: double
-        - date: Date
+        - operationDate: LocalDateTime
+        - accountId: Long
     }
 
     Client "1" -- "*" Account
@@ -38,100 +46,203 @@ package "Model" {
     SavingsAccount --|> Account
 }
 
-package DAO {
-    class ClientDAO {
+package "Database (Singleton)" {
+    class DatabaseConnection {
+        - {static} instance: DatabaseConnection
+        - connection: Connection
+        + {static} getInstance(): DatabaseConnection
+        + getConnection(): Connection
+        + closeConnection(): void
+    }
+}
+
+package "Factory" {
+    class AccountFactory {
+        + {static} createAccount(type: String, id: Long, number: String, balance: double, clientId: Long): Account
+    }
+    AccountFactory ..> Account : <<creates>>
+}
+
+package "DAO" {
+    package "builder" {
+        class QueryBuilder {
+            + {static} select(columns: String...): QueryBuilder
+            + {static} insert(table: String): QueryBuilder
+            + {static} update(table: String): QueryBuilder
+            + {static} delete(): QueryBuilder
+            + from(table: String): QueryBuilder
+            + where(condition: String): QueryBuilder
+            + orderBy(columns: String...): QueryBuilder
+            + build(): String
+        }
+    }
+
+    package "mapping" {
+        class MapResultSetHelper {
+            + mapResultSetToClient(rs: ResultSet): Client
+            + mapResultSetToAccount(rs: ResultSet): Account
+            + mapResultSetToOperation(rs: ResultSet): Operation
+        }
+    }
+
+    class ClientDao {
+        - connection: Connection
+        - helper: MapResultSetHelper
         + getAllClients(): List<Client>
         + findById(id: Long): Client
         + findByEmail(email: String): Client
     }
 
-    class OperationDAO {
+    class AccountDao {
+        - connection: Connection
+        - helper: MapResultSetHelper
+        + findAll(): List<Account>
+        + findById(id: Long): Account
+        + findByNumber(number: String): Account
+        + findByClientId(clientId: Long): List<Account>
+        + update(account: Account): void
+
+    }
+
+    class OperationDao {
+        - connection: Connection
+        - helper: MapResultSetHelper
         + findAll(): List<Operation>
         + findByAccountId(accountId: Long): List<Operation>
         + save(operation: Operation): void
     }
 
-    class AccountDAO {
-            + findAll(): List<Account>
-            + findById(id: Long): Account
-            + findByNumber(number: String): Account
-            + update(account: Account): void
-        }
+    ClientDao ..> DatabaseConnection
+    ClientDao ...> QueryBuilder
+    ClientDao ...> MapResultSetHelper
+    ClientDao ..> Client
+
+    AccountDao ..> DatabaseConnection
+    AccountDao ...> QueryBuilder
+    AccountDao ...> MapResultSetHelper
+    AccountDao ..> AccountFactory
+
+    OperationDao ..> DatabaseConnection
+    OperationDao .> QueryBuilder
+    OperationDao ...> MapResultSetHelper
+    OperationDao ..> Operation
 }
 
-package Database{
-    class DatabaseConnection {
-        - {static} instance: DatabaseConnection
-        + {static} getInstance(): DatabaseConnection
-        + getConnection(): Connection
+package "Service" {
+    class BankService {
+        - clientDao: ClientDao
+        - accountDao: AccountDao
+        - operationDao: OperationDao
+        + getAllClients(): List<Client>
+        + findClientById(id: Long): Client
+        + getClientAccounts(clientId: Long): List<Account>
+        + findAccountByNumber(number: String): Account
+        + getBalance(accountNumber: String): double
+        + deposit(accountNumber: String, amount: double): void
+        + withdraw(accountNumber: String, amount: double): void
+        + getAccountHistory(accountNumber: String): List<Operation>
+        + displayAccountHistory(accountNumber: String): void
     }
+
+    BankService --> ClientDao
+    BankService --> AccountDao
+    BankService --> OperationDao
 }
 
-package Factory{
-    class AccountFactory {
-        + createAccount(type: String): Account
+package "Exception" {
+    class BusinessException {
+        + BusinessException(message: String)
     }
-}
 
-package Exception {
-    class AccountNotFoundException{
+    class AccountNotFoundException {
+        + AccountNotFoundException(message: String)
     }
-    class BusinessException{
-    }
-    class InsufficientBalanceException{
+
+    class InsufficientBalanceException {
+        + InsufficientBalanceException(message: String)
     }
 
     AccountNotFoundException --|> BusinessException
     InsufficientBalanceException --|> BusinessException
+    BankService ..> BusinessException : <<throws>>
 }
 
-package DAO.Builder{
-    class QueryBuilder{
-    - query: StringBuilder
-    - whereConditions: List<String>
-    - orderByColumns: List<String>
-    + {static} select(columns: String...): QueryBuilder
-    + {static} insert(table: String): QueryBuilder
-    + {static} update(table: String): QueryBuilder
-    + {static} delete(): QueryBuilder
-    + from(table: String): QueryBuilder
-    + columns(columns: String...): QueryBuilder
-    + values(count: int): QueryBuilder
-    + set(columns: String...): QueryBuilder
-    + where(condition: String): QueryBuilder
-    + orderBy(columns: String...): QueryBuilder
-    + build(): String
+package "View" {
+    interface View {
+        + display(): void
     }
-}
 
-
-package Service {
-    class BankService {
-        + deposit(accountNumber: String, amount: double): void
-        + withdraw(accountNumber: String, amount: double): void
-        + getAccountHistory(accountNumber: String): List<Operation>
+    class InputHelper {
+        + {static} readString(scanner: Scanner, prompt: String): String
+        + {static} readInt(scanner: Scanner, prompt: String): int
+        + {static} readLong(scanner: Scanner, prompt: String): Long
+        + {static} readDouble(scanner: Scanner, prompt: String): double
     }
+
+    class ClientView {
+        - bankService: BankService
+        - scanner: Scanner
+        + display(): void
+        + displayAllClients(): void
+        + displayClientDetails(clientId: Long): void
+    }
+
+    class AccountView {
+        - bankService: BankService
+        - scanner: Scanner
+        + display(): void
+        + displayClientAccounts(): void
+        + displayBalance(): void
+    }
+
+    class OperationView {
+        - bankService: BankService
+        - scanner: Scanner
+        + display(): void
+        + performDeposit(): void
+        + performWithdrawal(): void
+        + displayAccountHistory(): void
+    }
+
+    class MenuView {
+        - bankService: BankService
+        - scanner: Scanner
+        - clientView: ClientView
+        - accountView: AccountView
+        - operationView: OperationView
+        + displayMainMenu(): void
+        + getUserChoice(): int
+        + handleChoice(choice: int): void
+        + waitForUser(): void
+    }
+
+    ClientView .|> View
+    AccountView .|> View
+    OperationView .|> View
+
+    ClientView ..> InputHelper : <<uses>>
+    AccountView ..> InputHelper : <<uses>>
+    OperationView ..> InputHelper : <<uses>>
+
+    MenuView --> ClientView
+    MenuView --> AccountView
+    MenuView --> OperationView
+
+    ClientView --> BankService
+    AccountView --> BankService
+    OperationView --> BankService
 }
 
-class ConsoleApp {
-    + main(args: String[]): void
-}
+package "Main" {
+    class ConsoleApp {
+        - {static} bankService: BankService
+        - {static} scanner: Scanner
+        - {static} menuView: MenuView
+        + {static} main(args: String[]): void
+    }
 
-AccountFactory ..> Account
-ClientDAO ..> DatabaseConnection
-ClientDAO ..> Client
-ClientDAO .> QueryBuilder
-OperationDAO .> QueryBuilder
-OperationDAO ..> DatabaseConnection
-OperationDAO ..> Operation
-AccountDAO ..> DatabaseConnection
-AccountDAO ...> AccountFactory
-AccountDAO .> QueryBuilder
-BankService --> AccountDAO
-BankService --> OperationDAO
-ConsoleApp --> BankService
-BankService .> AccountNotFoundException
-BankService .> BusinessException
-BankService .> InsufficientBalanceException
+    ConsoleApp -> MenuView
+    ConsoleApp --> BankService
+}
 
 @enduml
