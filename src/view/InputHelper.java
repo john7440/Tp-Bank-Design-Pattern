@@ -20,4 +20,28 @@ public class InputHelper {
             }
         }
     }
+
+    public static double readDouble(Scanner scanner,String prompt) {
+        while(true){
+            try{
+                System.out.println(prompt);
+                String input = scanner.nextLine().trim();
+                return  Double.parseDouble(input);
+            } catch(NumberFormatException e){
+                System.out.println("Enter a valid amount");
+            }
+        }
+    }
+    
+    public static Long readLong(Scanner scanner,String prompt) {
+        while(true){
+            try{
+                System.out.println(prompt);
+                String input = scanner.nextLine().trim();
+                return  Long.parseLong(input);
+            }  catch(NumberFormatException e){
+                System.out.println("Enter a valid id");
+            }
+        }
+    }
 }
