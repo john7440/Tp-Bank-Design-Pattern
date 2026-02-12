@@ -46,4 +46,15 @@ public class ClientView implements View{
             System.out.println("Total clients: " + clients.size());
         }
     }
+
+    public void displayClientDetails(Long clientId) {
+        Client client = bankService.findClientById(clientId);
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("Client Details:");
+        System.out.println("ID: " + client.getId());
+        System.out.println("Name: " + client.getName());
+        System.out.println("Email: " + client.getEmail());
+        System.out.println("Phone: " + (client.getPhone() != null ? client.getPhone() : "N/A"));
+        System.out.println("=".repeat(60));
+    }
 }
