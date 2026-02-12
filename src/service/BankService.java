@@ -43,6 +43,11 @@ public class BankService {
         return accountDao.findAll();
     }
 
+    public List<Account> getClientAccounts(Long clientId) {
+        Client client = findClientById(clientId);
+        return accountDao.findByClientId(client.getId());
+    }
+
     public Account findAccountByNumber(String accountNumber){
         Account account = accountDao.findByNumber(accountNumber);
         if (account ==null){
