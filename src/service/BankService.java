@@ -6,8 +6,10 @@ import dao.OperationDao;
 import exception.AccountNotFoundException;
 import model.Account;
 import model.Client;
+import model.Operation;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BankService {
@@ -51,5 +53,28 @@ public class BankService {
         Account account = findAccountByNumber(accountNumber);
         return account.getBalance();
     }
+
+    /*-------------------gestion opératios----------*/
+    public void deposit(String accountNumber, double amount){
+        if (amount < 0){
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        Account account = findAccountByNumber(accountNumber);
+
+        account.credit(amount);
+        accountDao.update(account);
+
+        Operation operation = new Operation();
+        operation.setType("DEPOSIT");
+        operation.setAmount(amount);
+        operation.setAccountId(account.getId());
+        operation.setOperationDate(LocalDateTime.now());
+        operationDao.save(operation);
+
+        System.out.println("Deposited " + amount + " € on account: " + account.getNumber());
+        System.out.println("New balance: " + account.getBalance() + " €");
+    }
+
 
 }
