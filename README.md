@@ -6,6 +6,7 @@ Application Java en mode console pour la gestion d'opérations bancaires, implé
 - [Aperçu](#aperçu)
 - [Fonctionnalités](#fonctionnalités)
 - [Architecture](#architecture)
+- [Design Patterns](#design-patterns)
 
 ## Aperçu
 
@@ -72,4 +73,35 @@ L'application suit une **architecture multi-couches** :
 - Les entités
 - Structures de données
 - Relations entre les entités
+
+## Design Patterns
+
+Ce projet implémente **5 design patterns** :
+
+### 1. Pattern Singleton
+**Classe** : `DatabaseConnection`
+- **Objectif** : garantir une instance unique de connexion à la BDD
+- **Avantage** : éviter la surcharge de connexions et le gaspillage de ressources
+```java
+DatabaseConnection.getInstance().getConnection();
+```
+### 2. Pattern Factory
+**Classe** : `AccountFactory`
+- **Objectif** : centralise la logique de création des comptes
+- **Avantage** : facilite l'ajout de nouveaux types de comptes (Pro, étudiant,...)
+
+### 3. Pattern DAO
+**Classes** : `ClientDao`, `AccountDao`, `OperationDao`
+- **Objectif** : separer l'accès aux données de la logique métier
+- **Avantage** : la techno de la bdd peut être changée sans affecter le code métier
+
+### 4. Pattern Builder
+**Classe** : `QueryBuilder`
+- **Objectif** : construire des requêtes SQL facilement lisiblent
+- **Avantage** : code lisible et moins sujet aux erreurs
+
+### 5. Pattern Helper/Utility
+**Classes** : `MapResultSetHelper`, `InputHelper`
+- **Objectif** : centraliser les operations communes
+- **Avantage** : le code peut etre réutilisé 
 
