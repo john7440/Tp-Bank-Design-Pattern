@@ -51,7 +51,7 @@ public class OperationView implements View{
         System.out.println("               DEPOSIT");
         System.out.println("=".repeat(60));
 
-        String accountNumber = InputHelper.readString(scanner, "Enter account number: ");
+        String accountNumber = InputHelper.readString(scanner, "Enter account num: ");
         double amount = InputHelper.readDouble(scanner, "Enter amount to deposit: ");
 
         bankService.deposit(accountNumber, amount);
@@ -73,6 +73,6 @@ public class OperationView implements View{
         System.out.println("=".repeat(60));
 
         String accountNumber = InputHelper.readString(scanner, "Enter account number: ");
-        bankService.getAccountHistory(accountNumber);
+        bankService.displayAccountHistory(accountNumber);
     }
 }

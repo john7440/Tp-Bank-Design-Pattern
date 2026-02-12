@@ -39,10 +39,6 @@ public class BankService {
     }
 
    /*------------------gestion comptes--------------------*/
-    public List<Account> getAllAccounts(){
-        return accountDao.findAll();
-    }
-
     public List<Account> getClientAccounts(Long clientId) {
         Client client = findClientById(clientId);
         return accountDao.findByClientId(client.getId());

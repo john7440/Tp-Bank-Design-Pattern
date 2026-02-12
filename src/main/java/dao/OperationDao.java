@@ -36,7 +36,7 @@ public class OperationDao {
         return operations;
     }
 
-    public List<Operation> findByAccountId(long accountId) {
+    public List<Operation> findByAccountId(Long accountId) {
         List<Operation> operations = new ArrayList<>();
         String sql = QueryBuilder
                 .select("*")

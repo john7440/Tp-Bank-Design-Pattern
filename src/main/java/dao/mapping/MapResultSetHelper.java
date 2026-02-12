@@ -54,7 +54,7 @@ public class MapResultSetHelper {
         operation.setAmount(rs.getDouble("amount"));
         operation.setAccountId(rs.getLong("account_id"));
 
-        Timestamp timestamp = rs.getTimestamp("created_at");
+        Timestamp timestamp = rs.getTimestamp("operation_date");
         if (timestamp != null) {
             operation.setOperationDate(timestamp.toLocalDateTime());
         }
