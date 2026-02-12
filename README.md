@@ -9,6 +9,7 @@ Application Java en mode console pour la gestion d'opérations bancaires, implé
 - [Design Patterns](#design-patterns)
 - [Technologies](#technologies)
 - [Prérequis](#prérequis)
+- [Installation](#installation)
 
 ## Aperçu
 
@@ -120,5 +121,23 @@ DatabaseConnection.getInstance().getConnection();
 - Java JDK 8 ou sup
 - Maven 3.6+
 - MySQL 8.x ou MariaDB 10.x
-- Git 
+- Git
 
+## Installation
+
+### 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/john7440/Tp-Bank-Design-Pattern.git
+cd Tp-bank-Design-Pattern
+```
+### 2. Build avec Maven
+
+```bash
+mvn clean install
+```
+### 3. Ouvrir dans IntelliJ IDEA
+
+1. File → Open → sélectionner le dossier du projet
+2. Attendre que Maven télécharge les dependances
+3. Intellij configerera automatiquement le projet
