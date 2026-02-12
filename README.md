@@ -11,6 +11,7 @@ Application Java en mode console pour la gestion d'opérations bancaires, implé
 - [Prérequis](#prérequis)
 - [Installation](#installation)
 - [Configuration de la Base de Données](#configuration-de-la-base-de-données)
+- [Configuration](#configuration)
 
 ## Aperçu
 
@@ -165,5 +166,30 @@ mariadb -u root -p < docs/sql/tpbank_database.sql
 - créer toutes les tables avec les contraintes
 - insérer des données de test
 
+## Configuration
+
+### Connexion à la Base de Données
+
+Modifier `DatabaseConnection.java` si nécessaire :
+
+```java
+private static final String URL = "jdbc:mysql://localhost:3306/tpbank";
+private static final String USER = "tpbank_user";
+private static final String PASSWORD = "TpBank2026!";
+```
+
+### Dépendances Maven
+
+Ajouter dans votre `pom.xml` :
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.33</version>
+    </dependency>
+</dependencies>
+```
 
 
