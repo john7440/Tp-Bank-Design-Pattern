@@ -38,4 +38,13 @@ public class OperationView implements View{
         double amount = InputHelper.readDouble(scanner, "Enter amount to withdrawal: ");
         bankService.withdraw(accountNumber, amount);
     }
+
+    public void displayAccountHistory(){
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("                ACCOUNT HISTORYY");
+        System.out.println("=".repeat(60));
+
+        String accountNumber = InputHelper.readString(scanner, "Enter account number: ");
+        bankService.getAccountHistory(accountNumber);
+    }
 }
