@@ -1,3 +1,5 @@
+import exception.AccountNotFoundException;
+import exception.InsufficientBalanceException;
 import service.BankService;
 import view.MenuView;
 
@@ -10,7 +12,28 @@ public class ConsoleApp {
 
     public static void main(String[] args) {
         displayWelcomeBanner();
+        boolean running = true;
+        while (running) {
+            menuView.displayMainMenu();
+            int choice = menuView.getUserChoice();
 
+            try {
+                if (choice == 0) {
+                    menuView.handleChoice(choice);
+                    running = false;
+                } else {
+                    menuView.handleChoice(choice);
+                    menuView.waitForUser();
+                }
+            } catch (AccountNotFoundException | InsufficientBalanceException e) {
+                System.out.println("Error" + e.getMessage());
+                menuView.waitForUser();
+            } catch (Exception e){
+                System.out.println("Unexpected error" + e.getMessage());
+                menuView.waitForUser();
+            }
+        }
+        scanner.close();
     }
 
     private static void displayWelcomeBanner() {
