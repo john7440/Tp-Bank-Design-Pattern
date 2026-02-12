@@ -21,9 +21,9 @@ public class ClientView implements View{
     }
 
     private void displayAllClients() {
-        System.out.println("\n==========================");
+        System.out.println("\n" + "=".repeat(60));
         System.out.println("     All Clients     ");
-        System.out.println("\n==========================");
+        System.out.println("\n" + "=".repeat(60));
 
         List<Client> clients = bankService.getAllClients();
 
@@ -42,7 +42,7 @@ public class ClientView implements View{
                         client.getPhone() != null ? client.getPhone() : "N/A"
                 );
             }
-            System.out.println("\n===========================");
+            System.out.println("\n" + "=".repeat(60));
             System.out.println("Total clients: " + clients.size());
         }
     }

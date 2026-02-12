@@ -38,7 +38,7 @@ public class ConsoleApp {
 
     private static void displayWelcomeBanner() {
         System.out.println("\n" + "=".repeat(60));
-        System.out.println("        WELCOME");
+        System.out.println("                        WELCOME");
         System.out.println("=".repeat(60));
     }
 }
