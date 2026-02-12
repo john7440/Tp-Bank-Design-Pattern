@@ -4,8 +4,10 @@ import dao.AccountDao;
 import dao.ClientDao;
 import dao.OperationDao;
 import exception.AccountNotFoundException;
+import exception.InsufficientBalanceException;
 import model.Account;
 import model.Client;
+import model.CurrentAccount;
 import model.Operation;
 
 
@@ -76,5 +78,34 @@ public class BankService {
         System.out.println("New balance: " + account.getBalance() + " €");
     }
 
+    public void withdraw(String accountNumber, double amount){
+        if (amount < 0){
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        Account account = findAccountByNumber(accountNumber);
+        if (account instanceof CurrentAccount){
+            CurrentAccount currentAccount = (CurrentAccount) account;
+            if (!currentAccount.canWithdraw(amount)){
+                throw new InsufficientBalanceException("Insufficient balance");
+            }
+        } else {
+            if (account.getBalance() < amount){
+                throw new InsufficientBalanceException("Insufficient balance");
+            }
+        }
+        account.debit(amount);
+        accountDao.update(account);
+
+        Operation operation = new Operation();
+        operation.setType("WITHDRAWAL");
+        operation.setAmount(amount);
+        operation.setAccountId(account.getId());
+        operation.setOperationDate(LocalDateTime.now());
+        operationDao.save(operation);
+
+        System.out.println("Withdrawal successful: " + amount +" € from account: " + account.getNumber());
+        System.out.println("New balance: "+ account.getBalance() + " €");
+    }
 
 }
