@@ -34,6 +34,27 @@ package "Model" {
     CurrentAccount --|> Account
     SavingsAccount --|> Account
 }
+
+package DAO {
+    class ClientDAO {
+        + getAllClients(): List<Client>
+        + findById(id: Long): Client
+        + findByEmail(email: String): Client
+    }
+
+    class OperationDAO {
+        + findAll(): List<Operation>
+        + findByAccountId(accountId: Long): List<Operation>
+        + save(operation: Operation): void
+    }
+
+    class AccountDAO {
+            + findAll(): List<Account>
+            + findById(id: Long): Account
+            + findByNumber(number: String): Account
+        }
+}
+
 package Singleton{
     class DatabaseConnection {
         - {static} instance: DatabaseConnection
@@ -47,23 +68,26 @@ package Factory{
         + createAccount(type: String): Account
     }
 }
-package DAO {
-    class ClientDAO {
-        + findAll(): List<Client>
-        + findByEmail(email: String): Client
-    }
 
-    class AccountDAO {
-        + findAll(): List<Account>
-        + findById(id: Long): Account
-        + findByNumber(number: String): Account
-    }
-
-    class OperationDAO {
-        + save(operation: Operation): void
-        + findByAccount(accountId: Long): List<Operation>
+package DAO.Builder{
+    class QueryBuilder{
+    - query: StringBuilder
+    - whereConditions: List<String>
+    - orderByColumns: List<String>
+    + {static} select(columns: String...): QueryBuilder
+    + {static} insert(table: String): QueryBuilder
+    + {static} update(table: String): QueryBuilder
+    + {static} delete(): QueryBuilder
+    + from(table: String): QueryBuilder
+    + columns(columns: String...): QueryBuilder
+    + values(count: int): QueryBuilder
+    + set(columns: String...): QueryBuilder
+    + where(condition: String): QueryBuilder
+    + orderBy(columns: String...): QueryBuilder
+    + build(): String
     }
 }
+
 
 package Service {
     class BankService {
@@ -80,10 +104,13 @@ class ConsoleApp {
 AccountFactory ..> Account
 ClientDAO ..> DatabaseConnection
 ClientDAO ..> Client
-AccountDAO ..> DatabaseConnection
-AccountDAO ..> AccountFactory
+ClientDAO .> QueryBuilder
+OperationDAO .> QueryBuilder
 OperationDAO ..> DatabaseConnection
 OperationDAO ..> Operation
+AccountDAO ..> DatabaseConnection
+AccountDAO ...> AccountFactory
+AccountDAO .> QueryBuilder
 BankService --> AccountDAO
 BankService --> OperationDAO
 ConsoleApp --> BankService
