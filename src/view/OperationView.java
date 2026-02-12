@@ -15,9 +15,37 @@ public class OperationView implements View{
 
     @Override
     public void display() {
-
+        displayOperationMenu();
     }
 
+    private void displayOperationMenu(){
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("             OPERATIONS MENU");
+        System.out.println("=".repeat(60));
+        System.out.println("1. Make a deposits");
+        System.out.println("2. Make a withdrawal");
+        System.out.println("3. Display account history");
+        System.out.println("0. Back tpo main menu");
+        System.out.println("=".repeat(60));
+
+        int choice = InputHelper.readInt(scanner,"Enter your choice: ");
+
+        switch(choice){
+            case 1:
+                performDeposit();
+                break;
+            case 2:
+                performWithdrawal();
+                break;
+            case 3:
+                displayAccountHistory();
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println("Invalid choice");
+        }
+    }
     public void performDeposit(){
         System.out.println("\n" + "=".repeat(60));
         System.out.println("               DEPOSIT");
