@@ -5,6 +5,7 @@ Application Java en mode console pour la gestion d'opérations bancaires, implé
 ## Table des Matières
 - [Aperçu](#aperçu)
 - [Fonctionnalités](#fonctionnalités)
+- [Architecture](#architecture)
 
 ## Aperçu
 
@@ -38,3 +39,37 @@ TP Bank est un système bancaire de base en Java. L'application gère les client
 - Applicatio de la limite de decouvert pour les comptes courants
 - Toutes les opérations enregistrées dans l'historique
 - Mise à jour du solde en temps réel
+
+## Architecture
+
+L'application suit une **architecture multi-couches** :
+- Interface Console (Couche View): pour gérer les interactions utilisateur
+- Logique metier (couche Service): les règles metier
+- Accès aux Données (Couche Dao): les opérations de base de données
+- Base de Données (MySQL): pour la persistance des données
+
+### Responsabilités par Couche
+
+**Couche View**
+- Gestion des interactions utilisateur
+- Navigation dans les menus
+- Formatage de l'affichage
+- Validation de saisies
+
+**Couche Service**
+- Implementation de la logique métier
+- Gestion des transarctions
+- Application des règles métier
+- Gestion des exceptions
+
+**Couche DAO**
+- Construction des requêtes SQL avec un Pattern Builder
+- Opérations sur la base de données
+- Mapping ResultSet vers objets
+- Gestion de la connexion avec Singleton
+
+**Couche Model**
+- Les entités
+- Structures de données
+- Relations entre les entités
+
