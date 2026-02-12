@@ -28,4 +28,14 @@ public class OperationView implements View{
 
         bankService.deposit(accountNumber, amount);
     }
+
+    public void performWithdrawal(){
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("                 WITHDRAWAL");
+        System.out.println("=".repeat(60));
+
+        String accountNumber = InputHelper.readString(scanner, "Enter account number: ");
+        double amount = InputHelper.readDouble(scanner, "Enter amount to withdrawal: ");
+        bankService.withdraw(accountNumber, amount);
+    }
 }
