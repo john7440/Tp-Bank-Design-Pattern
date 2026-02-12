@@ -7,6 +7,8 @@ Application Java en mode console pour la gestion d'opérations bancaires, implé
 - [Fonctionnalités](#fonctionnalités)
 - [Architecture](#architecture)
 - [Design Patterns](#design-patterns)
+- [Technologies](#technologies)
+- [Prérequis](#prérequis)
 
 ## Aperçu
 
@@ -104,4 +106,19 @@ DatabaseConnection.getInstance().getConnection();
 **Classes** : `MapResultSetHelper`, `InputHelper`
 - **Objectif** : centraliser les operations communes
 - **Avantage** : le code peut etre réutilisé 
+
+## Technologies
+
+- **Langage** : Java 8+
+- **Outil de Build** : Maven
+- **Base de Données** : MySQL 8.x ou MariaDB 10.x
+- **JDBC** : MySQL Connector/J 8.x
+- **Contrôle de Version** : Git
+
+## Prérequis
+
+- Java JDK 8 ou sup
+- Maven 3.6+
+- MySQL 8.x ou MariaDB 10.x
+- Git 
 
