@@ -10,6 +10,7 @@ Application Java en mode console pour la gestion d'opérations bancaires, implé
 - [Technologies](#technologies)
 - [Prérequis](#prérequis)
 - [Installation](#installation)
+- [Configuration de la Base de Données](#configuration-de-la-base-de-données)
 
 ## Aperçu
 
@@ -141,3 +142,28 @@ mvn clean install
 1. File → Open → sélectionner le dossier du projet
 2. Attendre que Maven télécharge les dependances
 3. Intellij configerera automatiquement le projet
+
+## Configuration de la Base de Données
+
+### Option 1 : Utiliser un client MySQL
+1. Ouvrir votre client MySQL/MariaDB
+2. Copier et coller le contenu de `tpbank_database.sql` qui se trouve dans docs/sql
+3. Executer le script
+
+### Option 2 : Ligne de commande
+
+```bash
+# Pour MySQL
+mysql -u root -p < docs/sql/tpbank_database.sql
+
+# Pour MariaDB
+mariadb -u root -p < docs/sql/tpbank_database.sql
+```
+**Note** : Le script va :
+- créer la base de données `tpbank`
+- ceéer un utilisateur dédié `tpbank_user` avec le mot de passe `TpBank2026!`
+- créer toutes les tables avec les contraintes
+- insérer des données de test
+
+
+
