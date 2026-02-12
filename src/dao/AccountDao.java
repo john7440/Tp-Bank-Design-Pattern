@@ -82,6 +82,29 @@ public class AccountDao {
         return null;
     }
 
+    public List<Account> findByClientId(Long clientId){
+        List<Account> accounts = new ArrayList<>();
+        String sql = QueryBuilder
+                .select("*")
+                .from("accounts")
+                .where("client_id = ?")
+                .orderBy("number")
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setLong(1, clientId);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()){
+                    accounts.add(helper.mapResultSetToAccount(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching account for client: " + clientId ,e);
+        }
+        return accounts;
+    }
+
     public void update(Account account){
         String sql = QueryBuilder
                 .update("accounts")
