@@ -4,12 +4,14 @@ left to right direction
 
 package "Model" {
     class Client {
+        - id : Long
         - name: String
         - email: String
         - phone: String
     }
 
     abstract class Account {
+        - id: Long
         - number: String
         - balance: double
         + credit(amount: double): void
@@ -24,6 +26,7 @@ package "Model" {
     }
 
     class Operation {
+        - id: Long
         - type: String
         - amount: double
         - date: Date
@@ -52,10 +55,11 @@ package DAO {
             + findAll(): List<Account>
             + findById(id: Long): Account
             + findByNumber(number: String): Account
+            + update(account: Account): void
         }
 }
 
-package Singleton{
+package Database{
     class DatabaseConnection {
         - {static} instance: DatabaseConnection
         + {static} getInstance(): DatabaseConnection
@@ -67,6 +71,18 @@ package Factory{
     class AccountFactory {
         + createAccount(type: String): Account
     }
+}
+
+package Exception {
+    class AccountNotFoundException{
+    }
+    class BusinessException{
+    }
+    class InsufficientBalanceException{
+    }
+
+    AccountNotFoundException --|> BusinessException
+    InsufficientBalanceException --|> BusinessException
 }
 
 package DAO.Builder{
@@ -114,5 +130,8 @@ AccountDAO .> QueryBuilder
 BankService --> AccountDAO
 BankService --> OperationDAO
 ConsoleApp --> BankService
+BankService .> AccountNotFoundException
+BankService .> BusinessException
+BankService .> InsufficientBalanceException
 
 @enduml

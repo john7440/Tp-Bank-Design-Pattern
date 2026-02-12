@@ -32,7 +32,7 @@ public class InputHelper {
             }
         }
     }
-    
+
     public static Long readLong(Scanner scanner,String prompt) {
         while(true){
             try{
