@@ -12,6 +12,8 @@ Application Java en mode console pour la gestion d'opérations bancaires, implé
 - [Installation](#installation)
 - [Configuration de la Base de Données](#configuration-de-la-base-de-données)
 - [Configuration](#configuration)
+- [Utilisation](#utilisation)
+- [Diagrammes UML](#diagrammes-uml)
 
 ## Aperçu
 
@@ -192,4 +194,39 @@ Ajouter dans votre `pom.xml` :
 </dependencies>
 ```
 
+## Utilisation
+
+### Lancer l'application depuis Intellij 
+
+1. Naviguer vers `ConsoleApp.java` dans src/main/java
+2. Clic droit sur le fichier
+3. Sélectionner **Run 'ConsoleApp.main()'**
+
+## Diagrammes UML
+
+### Diagramme de Classes
+
+Le diagramme de classes complet est disponible dans le dossier `docs/` :
+- **Source PlantUML** : `ClassDiagram.puml`
+- **Image PNG** : `TP_Bank.png`
+
+#### Relations Clés
+
+**Couche Model :**
+- Client 1 ─ * Account
+- Account 1 ─ * Operation
+- CurrentAccount ─|> Account
+- SavingsAccount ─|> Account
+
+**Design Patterns :**
+- DatabaseConection (Singleton)
+- AccountFactory (Factory)
+- QueryBuilder (Builder)
+- Tous les DAOs (Pattern DAO)
+
+**Couches de l'Architzcture :**
+- ConsoleApp → MenuView → Views
+- Views → BankService
+- BankService → DAOs
+- DAOs → DatabaseConnection
 
