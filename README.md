@@ -230,3 +230,6 @@ Le diagramme de classes complet est disponible dans le dossier `docs/` :
 - BankService → DAOs
 - DAOs → DatabaseConnection
 
+## Licence
+
+Ce projet est à but éducatif dans le cadre d'une formation sur les design patterns et l'architecture logicielle
