@@ -1,0 +1,49 @@
+package view;
+
+import model.Client;
+import service.BankService;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class ClientView implements View{
+    private BankService bankService;
+    private Scanner scanner;
+
+    public ClientView(BankService bankService, Scanner scanner) {
+        this.bankService = bankService;
+        this.scanner = scanner;
+    }
+
+    @Override
+    public void display() {
+        displayAllClients();
+    }
+
+    private void displayAllClients() {
+        System.out.println("\n==========================");
+        System.out.println("     All Clients     ");
+        System.out.println("\n==========================");
+
+        List<Client> clients = bankService.getAllClients();
+
+        if (clients.isEmpty()) {
+            System.out.println("No clients found");
+        } else {
+            System.out.printf("%-5s | %-20s | %-30s | %-15s%n",
+                    "ID", "Name", "Email", "Phone");
+            System.out.println("-".repeat(60));
+
+            for (Client client : clients) {
+                System.out.printf("%-5d | %-20s | %-30s | %-15s%n",
+                        client.getId(),
+                        client.getName(),
+                        client.getEmail(),
+                        client.getPhone() != null ? client.getPhone() : "N/A"
+                );
+            }
+            System.out.println("\n===========================");
+            System.out.println("Total clients: " + clients.size());
+        }
+    }
+}
