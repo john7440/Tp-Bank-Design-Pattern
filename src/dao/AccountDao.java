@@ -4,6 +4,8 @@ import dao.builder.QueryBuilder;
 import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
 import model.Account;
+import model.CurrentAccount;
+import model.SavingsAccount;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -78,6 +80,30 @@ public class AccountDao {
             throw new RuntimeException("Error fetching account by number " , e);
         }
         return null;
+    }
+
+    public void update(Account account){
+        String sql = QueryBuilder
+                .update("accounts")
+                .set("balance", "overdraft_limit", "interest_rate")
+                .where("id = ?")
+                .build();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setDouble(1,account.getBalance() );
+
+            if (account instanceof CurrentAccount){
+                stmt.setDouble(2, ((CurrentAccount) account).getOverdraftLimit());
+                stmt.setNull(3, Types.DECIMAL);
+            } else if (account instanceof SavingsAccount) {
+                stmt.setNull(2, Types.DECIMAL);
+                stmt.setDouble(3,((SavingsAccount) account).getInterestRate());
+            }
+            stmt.setLong(4, account.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e){
+            throw new RuntimeException("Error updating account " ,e);
+        }
     }
 
 }
