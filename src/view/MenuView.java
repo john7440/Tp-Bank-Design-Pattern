@@ -5,12 +5,12 @@ import service.BankService;
 import java.util.Scanner;
 
 public class MenuView {
-    private BankService  bankService;
-    private Scanner scanner;
+    private BankService bankService;
+    private final Scanner scanner;
 
-    private ClientView clientView;
-    private AccountView accountView;
-    private OperationView operationView;
+    private final ClientView clientView;
+    private final AccountView accountView;
+    private final OperationView operationView;
 
     public MenuView(BankService bankService, Scanner scanner) {
         this.bankService = bankService;
@@ -59,5 +59,9 @@ public class MenuView {
         }
     }
 
+    public void waitForUser(){
+        System.out.println("\nPress enter to continue..");
+        scanner.nextLine();
+    }
 
 }
