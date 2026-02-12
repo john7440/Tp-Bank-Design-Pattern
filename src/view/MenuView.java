@@ -19,4 +19,18 @@ public class MenuView {
         this.accountView = new AccountView(bankService,scanner);
         this.operationView = new OperationView(bankService,scanner);
     }
+
+    public void displayMainMenu() {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("                     MAIN MENU");
+        System.out.println("=".repeat(60));
+        System.out.println("1. Display all clients");
+        System.out.println("2. Display client accounts");
+        System.out.println("3. Operation (deposit/withdrawal/history)");
+        System.out.println("4. Check account balance");
+        System.out.println("0. Exit");
+        System.out.println("=".repeat(60));
+    }
+
+
 }
