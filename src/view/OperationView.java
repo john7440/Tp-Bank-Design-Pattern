@@ -17,4 +17,15 @@ public class OperationView implements View{
     public void display() {
 
     }
+
+    public void performDeposit(){
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("               DEPOSIT");
+        System.out.println("=".repeat(60));
+
+        String accountNumber = InputHelper.readString(scanner, "Enter account number: ");
+        double amount = InputHelper.readDouble(scanner, "Enter amount to deposit: ");
+
+        bankService.deposit(accountNumber, amount);
+    }
 }
