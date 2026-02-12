@@ -1,6 +1,36 @@
 @startuml TP_Bank
 
-package "Model" {
+hide stereotype
+skinparam shadowing true
+skinparam linetype ortho
+
+' Couleurs des packages
+skinparam package {
+    BackgroundColor PaleGreen
+    BorderColor Black
+    FontStyle bold
+}
+' Couleurs par package
+skinparam package {
+    BackgroundColor<<model>> LightBlue
+    BackgroundColor<<database>> LightGreen
+    BackgroundColor<<factory>> LightYellow
+    BackgroundColor<<dao>> LightCoral
+    BackgroundColor<<service>> LightSalmon
+    BackgroundColor<<exception>> Pink
+    BackgroundColor<<view>> Lavender
+    BackgroundColor<<main>> LightGray
+}
+
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+' --------------------
+' MODEL
+package "Model" <<Model>>{
     class Client {
         - id: Long
         - name: String
@@ -15,19 +45,22 @@ package "Model" {
         - balance: double
         - clientId: Long
         - createdAt: LocalDateTime
+        --
         + credit(amount: double): void
         + debit(amount: double): void
-        + getType(): String
+        + {abstract} getType(): String
     }
 
     class CurrentAccount {
         - overdraftLimit: double
+        --
         + canWithdraw(amount: double): boolean
         + getType(): String
     }
 
     class SavingsAccount {
         - interestRate: double
+        --
         + calculateInterest(): double
         + getType(): String
     }
@@ -40,32 +73,46 @@ package "Model" {
         - accountId: Long
     }
 
-    Client "1" -- "*" Account
-    Account "1" -- "*" Operation
-    CurrentAccount --|> Account
-    SavingsAccount --|> Account
+    Client "1  " -down[bold]- "*" Account
+    Account "1  " -[bold]- "*" Operation
+    CurrentAccount -left-|> Account
+    SavingsAccount -right-|> Account
 }
 
-package "Database (Singleton)" {
-    class DatabaseConnection {
+' -------------------------
+' DATABASE
+package "Database" <<database>> {
+    class DatabaseConnection <<Singleton>> {
         - {static} instance: DatabaseConnection
         - connection: Connection
+        --
         + {static} getInstance(): DatabaseConnection
         + getConnection(): Connection
         + closeConnection(): void
     }
 }
 
-package "Factory" {
+' ---------------------------
+' FACTORY PACKAGE
+package "Factory" <<factory>> {
     class AccountFactory {
-        + {static} createAccount(type: String, id: Long, number: String, balance: double, clientId: Long): Account
+        + {static} createAccount(type: String, id: Long,\n number: String, balance: double,\n clientId: Long): Account
     }
-    AccountFactory ..> Account : <<creates>>
 }
 
-package "DAO" {
-    package "builder" {
+AccountFactory .right[bold,dashed,thickness=2].> Account : <<creates>>
+
+' -------------------------------------
+' DAO PACKAGE
+
+package "DAO" <<dao>> {
+
+    package "builder" #FFEEEE {
         class QueryBuilder {
+            - query: StringBuilder
+            - whereConditions: List<String>
+            - orderByColumns: List<String>
+            --
             + {static} select(columns: String...): QueryBuilder
             + {static} insert(table: String): QueryBuilder
             + {static} update(table: String): QueryBuilder
@@ -77,17 +124,10 @@ package "DAO" {
         }
     }
 
-    package "mapping" {
-        class MapResultSetHelper {
-            + mapResultSetToClient(rs: ResultSet): Client
-            + mapResultSetToAccount(rs: ResultSet): Account
-            + mapResultSetToOperation(rs: ResultSet): Operation
-        }
-    }
-
     class ClientDao {
         - connection: Connection
         - helper: MapResultSetHelper
+        --
         + getAllClients(): List<Client>
         + findById(id: Long): Client
         + findByEmail(email: String): Client
@@ -96,43 +136,46 @@ package "DAO" {
     class AccountDao {
         - connection: Connection
         - helper: MapResultSetHelper
+        --
         + findAll(): List<Account>
         + findById(id: Long): Account
         + findByNumber(number: String): Account
         + findByClientId(clientId: Long): List<Account>
         + update(account: Account): void
-
     }
 
     class OperationDao {
         - connection: Connection
         - helper: MapResultSetHelper
+        --
         + findAll(): List<Operation>
         + findByAccountId(accountId: Long): List<Operation>
         + save(operation: Operation): void
     }
-
-    ClientDao ..> DatabaseConnection
-    ClientDao ...> QueryBuilder
-    ClientDao ...> MapResultSetHelper
-    ClientDao ..> Client
-
-    AccountDao ..> DatabaseConnection
-    AccountDao ...> QueryBuilder
-    AccountDao ...> MapResultSetHelper
-    AccountDao ..> AccountFactory
-
-    OperationDao ..> DatabaseConnection
-    OperationDao .> QueryBuilder
-    OperationDao ...> MapResultSetHelper
-    OperationDao ..> Operation
 }
 
-package "Service" {
+' Relations DAO
+ClientDao .right[bold,dashed,thickness=2].> DatabaseConnection
+ClientDao ..> QueryBuilder
+ClientDao .up[bold,dashed,thickness=2].> Client
+
+AccountDao .right[bold,dashed,thickness=2].> DatabaseConnection
+AccountDao .down.> QueryBuilder
+AccountDao .left[bold,dashed,thickness=2].> AccountFactory
+
+OperationDao .[bold,dashed,thickness=2].> DatabaseConnection
+OperationDao .down.> QueryBuilder
+OperationDao .up[bold,dashed,thickness=2].> Operation
+
+' -------------------
+' SERVICE PACKAGE
+
+package "Service" <<service>> {
     class BankService {
         - clientDao: ClientDao
         - accountDao: AccountDao
         - operationDao: OperationDao
+        --
         + getAllClients(): List<Client>
         + findClientById(id: Long): Client
         + getClientAccounts(clientId: Long): List<Account>
@@ -143,13 +186,16 @@ package "Service" {
         + getAccountHistory(accountNumber: String): List<Operation>
         + displayAccountHistory(accountNumber: String): void
     }
-
-    BankService --> ClientDao
-    BankService --> AccountDao
-    BankService --> OperationDao
 }
 
-package "Exception" {
+BankService -[bold]-> ClientDao
+BankService -[bold]-> AccountDao
+BankService -[bold]-> OperationDao
+
+' ------------------------
+' EXCEPTION PACKAGE
+
+package "Exception" <<exception>> {
     class BusinessException {
         + BusinessException(message: String)
     }
@@ -162,26 +208,24 @@ package "Exception" {
         + InsufficientBalanceException(message: String)
     }
 
-    AccountNotFoundException --|> BusinessException
+    AccountNotFoundException -left|> BusinessException
     InsufficientBalanceException --|> BusinessException
-    BankService ..> BusinessException : <<throws>>
 }
 
-package "View" {
-    interface View {
-        + display(): void
-    }
+BankService .[bold,dashed,thickness=2].> BusinessException : <<throws>>
 
-    class InputHelper {
-        + {static} readString(scanner: Scanner, prompt: String): String
-        + {static} readInt(scanner: Scanner, prompt: String): int
-        + {static} readLong(scanner: Scanner, prompt: String): Long
-        + {static} readDouble(scanner: Scanner, prompt: String): double
+' -------------------------------------
+' VIEW PACKAGE
+package "View" <<view>> {
+
+    interface ViewInterface {
+        + {abstract} display(): void
     }
 
     class ClientView {
         - bankService: BankService
         - scanner: Scanner
+        --
         + display(): void
         + displayAllClients(): void
         + displayClientDetails(clientId: Long): void
@@ -190,6 +234,7 @@ package "View" {
     class AccountView {
         - bankService: BankService
         - scanner: Scanner
+        --
         + display(): void
         + displayClientAccounts(): void
         + displayBalance(): void
@@ -198,6 +243,7 @@ package "View" {
     class OperationView {
         - bankService: BankService
         - scanner: Scanner
+        --
         + display(): void
         + performDeposit(): void
         + performWithdrawal(): void
@@ -210,39 +256,40 @@ package "View" {
         - clientView: ClientView
         - accountView: AccountView
         - operationView: OperationView
+        --
         + displayMainMenu(): void
         + getUserChoice(): int
         + handleChoice(choice: int): void
         + waitForUser(): void
     }
-
-    ClientView .|> View
-    AccountView .|> View
-    OperationView .|> View
-
-    ClientView ..> InputHelper : <<uses>>
-    AccountView ..> InputHelper : <<uses>>
-    OperationView ..> InputHelper : <<uses>>
-
-    MenuView --> ClientView
-    MenuView --> AccountView
-    MenuView --> OperationView
-
-    ClientView --> BankService
-    AccountView --> BankService
-    OperationView --> BankService
 }
 
-package "Main" {
-    class ConsoleApp {
+ClientView -up-|> ViewInterface
+AccountView -up-|> ViewInterface
+OperationView -up-|> ViewInterface
+
+MenuView -left-> ClientView
+MenuView -left-> AccountView
+MenuView -left-> OperationView
+
+ClientView -[bold]-> BankService
+AccountView -[bold]-> BankService
+OperationView -[bold]-> BankService
+
+' ------------------------------------
+' MAIN
+package "Main" <<main>> {
+    class ConsoleApp <<Application>> {
         - {static} bankService: BankService
         - {static} scanner: Scanner
         - {static} menuView: MenuView
+        --
         + {static} main(args: String[]): void
     }
-
-    ConsoleApp -> MenuView
-    ConsoleApp --> BankService
 }
+
+ConsoleApp -up[bold]-> MenuView
+ConsoleApp -down[bold]-> BankService
+
 
 @enduml
