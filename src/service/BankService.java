@@ -108,4 +108,9 @@ public class BankService {
         System.out.println("New balance: "+ account.getBalance() + " €");
     }
 
+    public List<Operation> getAccountHistory(String accountNumber){
+        Account account = findAccountByNumber(accountNumber);
+        return operationDao.findByAccountId(account.getId());
+    }
+
 }
