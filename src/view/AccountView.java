@@ -73,4 +73,17 @@ public class AccountView implements View{
         }
         return "";
     }
+
+    public void displayBalance(){
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("            CHECK BALANCE");
+        System.out.println("=".repeat(60));
+
+        String accountNumber = InputHelper.readString(scanner, "Enter Account Number: ");
+        double balance = bankService.getBalance(accountNumber);
+
+        System.out.println("\nAccount: " + accountNumber);
+        System.out.printf("Current balance: %,.2f€%n", balance);
+        System.out.println("=".repeat(60));
+    }
 }
