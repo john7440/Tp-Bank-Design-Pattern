@@ -32,5 +32,32 @@ public class MenuView {
         System.out.println("=".repeat(60));
     }
 
+    public int getUserChoice(){
+        return InputHelper.readInt(scanner,"Enter your choice: ");
+    }
+
+    public void handleChoice(int choice){
+        switch (choice){
+            case 1:
+                clientView.display();
+                break;
+            case 2:
+                accountView.displayClientAccounts();
+                break;
+            case 3:
+                operationView.display();
+                break;
+            case 4:
+                accountView.displayBalance();
+                break;
+            case 0:
+                System.out.println("\n Goodbye");
+                break;
+            default:
+                System.out.println("Invalid choice, please try again");
+
+        }
+    }
+
 
 }
