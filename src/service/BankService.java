@@ -113,4 +113,29 @@ public class BankService {
         return operationDao.findByAccountId(account.getId());
     }
 
+    public void displayAccountHistory(String accountNumber){
+        Account account = findAccountByNumber(accountNumber);
+        List<Operation> operations = operationDao.findByAccountId(account.getId());
+
+        System.out.println("\n=====================================");
+        System.out.println("History of account: " + account.getNumber());
+        System.out.println("Current balance: " + account.getBalance() + "€");
+        System.out.println("\n=====================================");
+
+        if (operations.isEmpty()){
+            System.out.println("No operations yet");
+        } else {
+            for (Operation op : operations){
+                String symbol = op.getType().equals("DEPOSIT") ? "+" : "-";
+                System.out.printf("%s | %s %s%.2f€%n",
+                        op.getOperationDate().toString().substring(0,19),
+                        op.getType(),
+                        symbol,
+                        op.getAmount()
+                );
+            }
+        }
+        System.out.println("\n====================================");
+    }
+
 }
