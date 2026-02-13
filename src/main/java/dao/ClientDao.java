@@ -3,6 +3,8 @@ package dao;
 import dao.builder.QueryBuilder;
 import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
+import exception.AccountNotFoundException;
+import exception.ClientNotFoundException;
 import model.Client;
 
 import java.sql.*;
@@ -10,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDao {
-    private Connection connection;
-    private MapResultSetHelper helper =  new MapResultSetHelper();
+    private final Connection connection;
+    private final MapResultSetHelper helper =  new MapResultSetHelper();
+    private static final String CLIENT = "clients";
 
     public ClientDao() {
         this.connection = DatabaseConnection.getInstance().getConnection();
@@ -21,7 +24,7 @@ public class ClientDao {
         List<Client> clients = new ArrayList<>();
         String sql = QueryBuilder
                 .select("*")
-                .from("clients")
+                .from(CLIENT)
                 .orderBy("name")
                 .build();
 
@@ -32,7 +35,7 @@ public class ClientDao {
                 clients.add(helper.mapResultSetToClient(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching all clients",e);
+            throw new ClientNotFoundException("Error fetching all clients");
         }
         return clients;
     }
@@ -40,7 +43,7 @@ public class ClientDao {
     public Client findById(Long id){
         String sql = QueryBuilder
                 .select("*")
-                .from("clients")
+                .from(CLIENT)
                 .where("id = ?")
                 .build();
 
@@ -53,7 +56,7 @@ public class ClientDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching client by id",e);
+            throw new ClientNotFoundException("Error fetching client by id");
         }
         return null;
     }
@@ -61,7 +64,7 @@ public class ClientDao {
     public Client findByEmail(String email) {
         String sql = QueryBuilder
                 .select("*")
-                .from("clients")
+                .from(CLIENT)
                 .where("email = ?")
                 .build();
 
@@ -74,7 +77,7 @@ public class ClientDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching client by email", e);
+            throw new ClientNotFoundException("Error fetching client by email");
         }
         return null;
     }

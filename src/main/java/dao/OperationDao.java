@@ -3,6 +3,8 @@ package dao;
 import dao.builder.QueryBuilder;
 import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
+import exception.InvalidOperationException;
+import exception.OperationNotFoundException;
 import model.Operation;
 
 import java.sql.*;
@@ -10,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OperationDao {
-    private Connection connection;
-    private MapResultSetHelper helper =  new MapResultSetHelper();
+    private final Connection connection;
+    private final MapResultSetHelper helper =  new MapResultSetHelper();
+    private static final String OPERATIONS = "operations";
 
     public OperationDao() {
         this.connection = DatabaseConnection.getInstance().getConnection();
@@ -21,7 +24,7 @@ public class OperationDao {
         List<Operation> operations = new ArrayList<>();
         String sql= QueryBuilder
                 .select("*")
-                .from("operations")
+                .from(OPERATIONS)
                 .orderBy("operation_date DESC")
                 .build();
         try (Statement stmt = connection.createStatement();
@@ -31,7 +34,7 @@ public class OperationDao {
                 operations.add(helper.mapResultSetToOperation(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching all operations",e);
+            throw new OperationNotFoundException("Error fetching all operations");
         }
         return operations;
     }
@@ -40,7 +43,7 @@ public class OperationDao {
         List<Operation> operations = new ArrayList<>();
         String sql = QueryBuilder
                 .select("*")
-                .from("operations")
+                .from(OPERATIONS)
                 .where("account_id = ?")
                 .orderBy("operation_date DESC")
                 .build();
@@ -54,14 +57,14 @@ public class OperationDao {
                 }
             }
         } catch (SQLException e){
-            throw new RuntimeException("Error fetching operations for: "+ accountId,e);
+            throw new OperationNotFoundException("Error fetching operations for: "+ accountId);
         }
         return operations;
     }
 
     public void save(Operation operation) {
         String sql = QueryBuilder
-                .insert("operations")
+                .insert(OPERATIONS)
                 .columns("type", "amount", "account_id")
                 .values(3)
                 .build();
@@ -79,7 +82,7 @@ public class OperationDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error saving operation",e);
+            throw new InvalidOperationException("Error saving operation");
         }
     }
 

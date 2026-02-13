@@ -3,6 +3,7 @@ package dao;
 import dao.builder.QueryBuilder;
 import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
+import exception.AccountNotFoundException;
 import model.Account;
 import model.CurrentAccount;
 import model.SavingsAccount;
@@ -12,8 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDao {
-    private Connection connection;
-    private MapResultSetHelper helper = new MapResultSetHelper();
+    private final Connection connection;
+    private final MapResultSetHelper helper = new MapResultSetHelper();
+    private static final String ACCOUNT = "accounts";
 
     public AccountDao() {
         this.connection = DatabaseConnection.getInstance().getConnection();
@@ -24,7 +26,7 @@ public class AccountDao {
         List<Account> accounts = new ArrayList<>();
         String sql = QueryBuilder
                 .select("*")
-                .from("accounts")
+                .from(ACCOUNT)
                 .orderBy("number")
                 .build();
 
@@ -35,7 +37,7 @@ public class AccountDao {
                 accounts.add(helper.mapResultSetToAccount(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching accounts" ,e);
+            throw new AccountNotFoundException("Error fetching accounts");
         }
         return accounts;
     }
@@ -43,7 +45,7 @@ public class AccountDao {
     public Account findById(long id){
         String sql = QueryBuilder
                 .select("*")
-                .from("accounts")
+                .from(ACCOUNT)
                 .where("id = ?")
                 .build();
 
@@ -56,7 +58,7 @@ public class AccountDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching account by id " ,e);
+            throw new AccountNotFoundException("Error fetching account by id ");
         }
         return null;
     }
@@ -64,7 +66,7 @@ public class AccountDao {
     public Account findByNumber(String number){
         String sql = QueryBuilder
                 .select("*")
-                .from("accounts")
+                .from(ACCOUNT)
                 .where("number = ?")
                 .build();
 
@@ -77,7 +79,7 @@ public class AccountDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching account by number " , e);
+            throw new AccountNotFoundException("Error fetching account by number ");
         }
         return null;
     }
@@ -86,7 +88,7 @@ public class AccountDao {
         List<Account> accounts = new ArrayList<>();
         String sql = QueryBuilder
                 .select("*")
-                .from("accounts")
+                .from(ACCOUNT)
                 .where("client_id = ?")
                 .orderBy("number")
                 .build();
@@ -100,14 +102,14 @@ public class AccountDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching account for client: " + clientId ,e);
+            throw new AccountNotFoundException("Error fetching account for client: " + clientId);
         }
         return accounts;
     }
 
     public void update(Account account){
         String sql = QueryBuilder
-                .update("accounts")
+                .update(ACCOUNT)
                 .set("balance", "overdraft_limit", "interest_rate")
                 .where("id = ?")
                 .build();
@@ -115,17 +117,17 @@ public class AccountDao {
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setDouble(1,account.getBalance() );
 
-            if (account instanceof CurrentAccount){
-                stmt.setDouble(2, ((CurrentAccount) account).getOverdraftLimit());
+            if (account instanceof CurrentAccount currentAccount){
+                stmt.setDouble(2, currentAccount.getOverdraftLimit());
                 stmt.setNull(3, Types.DECIMAL);
-            } else if (account instanceof SavingsAccount) {
+            } else if (account instanceof SavingsAccount savingsAccount) {
                 stmt.setNull(2, Types.DECIMAL);
-                stmt.setDouble(3,((SavingsAccount) account).getInterestRate());
+                stmt.setDouble(3,savingsAccount.getInterestRate());
             }
             stmt.setLong(4, account.getId());
             stmt.executeUpdate();
         } catch (SQLException e){
-            throw new RuntimeException("Error updating account " ,e);
+            throw new AccountNotFoundException("Error updating account ");
         }
     }
 

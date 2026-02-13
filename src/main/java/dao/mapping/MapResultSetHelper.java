@@ -18,12 +18,12 @@ public class MapResultSetHelper {
 
         Account account = AccountFactory.createAccount(type,id, number, balance, clientId);
 
-        if (account instanceof CurrentAccount){
+        if (account instanceof CurrentAccount currentAccount){
             double overdraftLimit = rs.getDouble("overdraft_limit");
-            ((CurrentAccount)account).setOverdraftLimit(overdraftLimit);
-        } else if (account instanceof SavingsAccount) {
+            currentAccount.setOverdraftLimit(overdraftLimit);
+        } else if (account instanceof SavingsAccount savingsAccount) {
             double interestRate = rs.getDouble("interest_rate");
-            ((SavingsAccount)account).setInterestRate(interestRate);
+            savingsAccount.setInterestRate(interestRate);
         }
 
         Timestamp timestamp = rs.getTimestamp("created_at");

@@ -196,20 +196,36 @@ BankService -[bold]-> OperationDao
 ' EXCEPTION PACKAGE
 
 package "Exception" <<exception>> {
-    class BusinessException {
+    exception BusinessException {
         + BusinessException(message: String)
     }
 
-    class AccountNotFoundException {
+    exception AccountNotFoundException {
         + AccountNotFoundException(message: String)
     }
 
-    class InsufficientBalanceException {
+    exception InsufficientBalanceException {
         + InsufficientBalanceException(message: String)
     }
 
+    exception ClientNotFoundException{
+        + ClientNotFoundException(message: String)
+    }
+
+    exception OperationNotFoundException {
+        + OperationNotFoundException(message: String)
+    }
+
+    exception InvalidOperationException{
+        + InvalidOperationException(message: String)
+    }
+
     AccountNotFoundException -left|> BusinessException
-    InsufficientBalanceException --|> BusinessException
+    ClientNotFoundException -left-|> BusinessException
+    InsufficientBalanceException -up-|> BusinessException
+    OperationNotFoundException -up-|> BusinessException
+    InvalidOperationException -up-|> BusinessException
+
 }
 
 BankService .[bold,dashed,thickness=2].> BusinessException : <<throws>>

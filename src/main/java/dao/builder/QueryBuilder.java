@@ -1,12 +1,13 @@
 package dao.builder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QueryBuilder {
-    private StringBuilder query;
-    private List<String> whereConditions;
-    private List<String> orderByColumns;
+    private final StringBuilder query;
+    private final List<String> whereConditions;
+    private final List<String> orderByColumns;
 
     private QueryBuilder(){
         this.query = new StringBuilder();
@@ -79,9 +80,7 @@ public class QueryBuilder {
     }
 
     public QueryBuilder orderBy(String... columns){
-        for (String columnName : columns){
-            orderByColumns.add(columnName);
-        }
+        orderByColumns.addAll(Arrays.asList(columns));
         return this;
     }
 
