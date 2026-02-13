@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class BankService {
-    private ClientDao clientDao;
-    private AccountDao accountDao;
-    private OperationDao operationDao;
+    private final ClientDao clientDao;
+    private final AccountDao accountDao;
+    private final OperationDao operationDao;
 
     public BankService(){
         this.clientDao = new ClientDao();
@@ -106,11 +106,6 @@ public class BankService {
 
         System.out.println("Withdrawal successful: " + amount +" € from account: " + account.getNumber());
         System.out.println("New balance: "+ account.getBalance() + " €");
-    }
-
-    public List<Operation> getAccountHistory(String accountNumber){
-        Account account = findAccountByNumber(accountNumber);
-        return operationDao.findByAccountId(account.getId());
     }
 
     public void displayAccountHistory(String accountNumber){
