@@ -220,6 +220,10 @@ package "Exception" <<exception>> {
         + InvalidOperationException(message: String)
     }
 
+    exception DatabaseConnectionException{
+        + DatabaseConnectionException(message: String)
+    }
+
     AccountNotFoundException -left|> BusinessException
     ClientNotFoundException -left-|> BusinessException
     InsufficientBalanceException -up-|> BusinessException
@@ -229,6 +233,7 @@ package "Exception" <<exception>> {
 }
 
 BankService .[bold,dashed,thickness=2].> BusinessException : <<throws>>
+DatabaseConnection .right.> DatabaseConnectionException
 
 ' -------------------------------------
 ' VIEW PACKAGE
