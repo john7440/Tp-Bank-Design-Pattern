@@ -5,8 +5,8 @@ import service.BankService;
 import java.util.Scanner;
 
 public class OperationView implements View{
-    private BankService bankService;
-    private Scanner scanner;
+    private final BankService bankService;
+    private final Scanner scanner;
 
     public OperationView(BankService bankService, Scanner scanner) {
         this.bankService = bankService;

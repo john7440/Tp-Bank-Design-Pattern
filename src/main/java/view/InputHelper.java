@@ -4,6 +4,10 @@ import java.util.Scanner;
 
 public class InputHelper {
 
+    private InputHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String readString(Scanner scanner,String prompt) {
         System.out.println(prompt);
         return scanner.nextLine().trim();

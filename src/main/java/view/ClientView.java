@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ClientView implements View{
-    private BankService bankService;
+    private final BankService bankService;
     private Scanner scanner;
 
     public ClientView(BankService bankService, Scanner scanner) {
