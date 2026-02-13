@@ -208,7 +208,7 @@ Ajouter dans votre `pom.xml` :
 
 Le diagramme de classes complet est disponible dans le dossier `docs/` :
 - **Source PlantUML** : `ClassDiagram.puml`
-- **Image PNG** : `TP_Bank.png`
+- **Image PNG** : `TP_Bank_v2.png`
 
 #### Relations Clés
 
