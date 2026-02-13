@@ -1,3 +1,4 @@
+import database.DatabaseConnection;
 import exception.AccountNotFoundException;
 import exception.InsufficientBalanceException;
 import service.BankService;
@@ -34,11 +35,16 @@ public class ConsoleApp {
             }
         }
         scanner.close();
+        closeRessources();
     }
 
     private static void displayWelcomeBanner() {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("                        WELCOME");
         System.out.println("=".repeat(60));
+    }
+
+    private static void closeRessources() {
+        DatabaseConnection.getInstance().closeConnection();
     }
 }
