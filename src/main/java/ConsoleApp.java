@@ -6,9 +6,9 @@ import view.MenuView;
 import java.util.Scanner;
 
 public class ConsoleApp {
-    private static BankService bankService = new BankService();
-    private static Scanner scanner = new Scanner(System.in);
-    private static MenuView menuView = new MenuView(bankService, scanner);
+    private static final BankService bankService = new BankService();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final MenuView menuView = new MenuView(bankService, scanner);
 
     public static void main(String[] args) {
         displayWelcomeBanner();
