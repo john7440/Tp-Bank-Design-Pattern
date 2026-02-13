@@ -6,13 +6,12 @@ import model.CurrentAccount;
 import model.SavingsAccount;
 import service.BankService;
 
-import java.rmi.ConnectIOException;
 import java.util.List;
 import java.util.Scanner;
 
 public class AccountView implements View{
-    private BankService bankService;
-    private Scanner scanner;
+    private final BankService bankService;
+    private final Scanner scanner;
 
     public AccountView(BankService bankService, Scanner scanner) {
         this.bankService = bankService;
@@ -64,12 +63,10 @@ public class AccountView implements View{
     }
 
     public String getAccountDetails(Account account) {
-        if (account instanceof CurrentAccount){
-            CurrentAccount ca =  (CurrentAccount) account;
-            return "Overdraft: " + String.format("%.0f€", ca.getOverdraftLimit());
-        } else if (account instanceof SavingsAccount) {
-            SavingsAccount sa =  (SavingsAccount) account;
-            return "Interest; " + String.format("%.2f%%", sa.getInterestRate());
+        if (account instanceof CurrentAccount currentAccount){
+            return "Overdraft: " + String.format("%.0f€", currentAccount.getOverdraftLimit());
+        } else if (account instanceof SavingsAccount savingsAccount) {
+            return "Interest; " + String.format("%.2f%%", savingsAccount.getInterestRate());
         }
         return "";
     }
