@@ -5,7 +5,7 @@ import service.BankService;
 import java.util.Scanner;
 
 public class MenuView {
-    private BankService bankService;
+    private final BankService bankService;
     private final Scanner scanner;
 
     private final ClientView clientView;
@@ -51,7 +51,7 @@ public class MenuView {
                 accountView.displayBalance();
                 break;
             case 0:
-                System.out.println("\n Goodbye");
+                System.out.println("\nGoodbye");
                 break;
             default:
                 System.out.println("Invalid choice, please try again");

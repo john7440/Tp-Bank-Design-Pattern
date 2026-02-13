@@ -85,8 +85,7 @@ public class BankService {
         }
 
         Account account = findAccountByNumber(accountNumber);
-        if (account instanceof CurrentAccount){
-            CurrentAccount currentAccount = (CurrentAccount) account;
+        if (account instanceof CurrentAccount currentAccount){
             if (!currentAccount.canWithdraw(amount)){
                 throw new InsufficientBalanceException("Insufficient balance");
             }

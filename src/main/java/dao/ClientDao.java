@@ -3,7 +3,6 @@ package dao;
 import dao.builder.QueryBuilder;
 import dao.mapping.MapResultSetHelper;
 import database.DatabaseConnection;
-import exception.AccountNotFoundException;
 import exception.ClientNotFoundException;
 import model.Client;
 

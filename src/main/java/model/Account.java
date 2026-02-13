@@ -10,10 +10,10 @@ public abstract class Account {
     private LocalDateTime createdAt;
 
     /* ---------------Constructeurs------------------*/
-    public Account() {
+    protected Account() {
     }
 
-    public Account(Long id, String number, Double balance, Long clientId) {
+    protected Account(Long id, String number, Double balance, Long clientId) {
         this.id = id;
         this.number = number;
         this.balance = balance;

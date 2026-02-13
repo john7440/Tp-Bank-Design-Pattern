@@ -6,6 +6,10 @@ import model.SavingsAccount;
 
 public class AccountFactory {
 
+    private AccountFactory() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /*--------------------méthodes----------------*/
     public static Account createAccount(String type,Long id, String number, double balance, Long clientId) {
         if (type == null || type.isEmpty()){

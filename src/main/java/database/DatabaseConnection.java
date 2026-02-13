@@ -1,5 +1,7 @@
 package database;
 
+import exception.DatabaseConnectionException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,9 +20,9 @@ public class DatabaseConnection {
             this.connection = DriverManager.getConnection(URL,USER,PASSWORD);
             System.out.println("Connected");
         } catch (ClassNotFoundException e) {
-            throw  new RuntimeException("Mysql driver not found",e);
+            throw  new DatabaseConnectionException("Mysql driver not found",e);
         } catch (SQLException e) {
-            throw new RuntimeException("Connection failed",e);
+            throw new DatabaseConnectionException("Connection failed",e);
         }
     }
 
@@ -37,7 +39,7 @@ public class DatabaseConnection {
                 connection = DriverManager.getConnection(URL,USER,PASSWORD);
             }
         } catch (SQLException e){
-            throw new RuntimeException("Connection failed",e);
+            throw new DatabaseConnectionException("Connection failed",e);
         }
         return connection;
     }
@@ -48,7 +50,7 @@ public class DatabaseConnection {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error closing connection!",e);
+            throw new DatabaseConnectionException("Error closing connection!",e);
         }
     }
 }
