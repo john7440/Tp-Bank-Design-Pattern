@@ -1,15 +1,15 @@
 package view;
 
-import service.BankService;
+import service.OperationService;
 
 import java.util.Scanner;
 
 public class OperationView implements View{
-    private final BankService bankService;
+    private final OperationService operationService;
     private final Scanner scanner;
 
-    public OperationView(BankService bankService, Scanner scanner) {
-        this.bankService = bankService;
+    public OperationView(OperationService operationService, Scanner scanner) {
+        this.operationService = operationService;
         this.scanner = scanner;
     }
 
@@ -54,7 +54,7 @@ public class OperationView implements View{
         String accountNumber = InputHelper.readString(scanner, "Enter account num: ");
         double amount = InputHelper.readDouble(scanner, "Enter amount to deposit: ");
 
-        bankService.deposit(accountNumber, amount);
+        operationService.deposit(accountNumber, amount);
     }
 
     public void performWithdrawal(){
@@ -64,15 +64,15 @@ public class OperationView implements View{
 
         String accountNumber = InputHelper.readString(scanner, "Enter account number: ");
         double amount = InputHelper.readDouble(scanner, "Enter amount to withdrawal: ");
-        bankService.withdraw(accountNumber, amount);
+        operationService.withdraw(accountNumber, amount);
     }
 
     public void displayAccountHistory(){
         System.out.println("\n" + "=".repeat(60));
-        System.out.println("                ACCOUNT HISTORYY");
+        System.out.println("                ACCOUNT HISTORY");
         System.out.println("=".repeat(60));
 
         String accountNumber = InputHelper.readString(scanner, "Enter account number: ");
-        bankService.displayAccountHistory(accountNumber);
+        operationService.displayAccountHistory(accountNumber);
     }
 }

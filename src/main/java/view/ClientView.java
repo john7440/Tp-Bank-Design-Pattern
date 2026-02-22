@@ -1,17 +1,17 @@
 package view;
 
 import model.Client;
-import service.BankService;
+import service.ClientService;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ClientView implements View{
-    private final BankService bankService;
-    private Scanner scanner;
+    private final ClientService clientService;
+    private final Scanner scanner;
 
-    public ClientView(BankService bankService, Scanner scanner) {
-        this.bankService = bankService;
+    public ClientView(ClientService clientService, Scanner scanner) {
+        this.clientService = clientService;
         this.scanner = scanner;
     }
 
@@ -25,7 +25,7 @@ public class ClientView implements View{
         System.out.println("     All Clients     ");
         System.out.println("\n" + "=".repeat(60));
 
-        List<Client> clients = bankService.getAllClients();
+        List<Client> clients = clientService.getAllClients();
 
         if (clients.isEmpty()) {
             System.out.println("No clients found");
@@ -48,7 +48,7 @@ public class ClientView implements View{
     }
 
     public void displayClientDetails(Long clientId) {
-        Client client = bankService.findClientById(clientId);
+        Client client = clientService.findClientById(clientId);
         System.out.println("\n" + "=".repeat(60));
         System.out.println("Client Details:");
         System.out.println("ID: " + client.getId());

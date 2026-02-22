@@ -4,17 +4,20 @@ import model.Account;
 import model.Client;
 import model.CurrentAccount;
 import model.SavingsAccount;
-import service.BankService;
+import service.AccountService;
+import service.ClientService;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class AccountView implements View{
-    private final BankService bankService;
+    private final ClientService clientService;
+    private final AccountService accountService;
     private final Scanner scanner;
 
-    public AccountView(BankService bankService, Scanner scanner) {
-        this.bankService = bankService;
+    public AccountView(ClientService clientService,AccountService accountService, Scanner scanner) {
+        this.clientService = clientService;
+        this.accountService = accountService;
         this.scanner = scanner;
     }
 
@@ -29,12 +32,12 @@ public class AccountView implements View{
         System.out.println("=".repeat(60));
 
         Long clientId = InputHelper.readLong(scanner, "Enter Client ID: ");
-        Client client =  bankService.findClientById(clientId);
+        Client client =  clientService.findClientById(clientId);
 
         System.out.println("\nClient: " + client.getName() + "\nEmail: " + client.getEmail());
         System.out.println("-".repeat(60));
 
-        List<Account> accounts = bankService.getClientAccounts(clientId);
+        List<Account> accounts = accountService.getClientAccounts(clientId);
 
         if (accounts.isEmpty()) {
             System.out.println("No accounts found for this client");
@@ -77,7 +80,7 @@ public class AccountView implements View{
         System.out.println("=".repeat(60));
 
         String accountNumber = InputHelper.readString(scanner, "Enter Account Number: ");
-        double balance = bankService.getBalance(accountNumber);
+        double balance = accountService.getBalance(accountNumber);
 
         System.out.println("\nAccount: " + accountNumber);
         System.out.printf("Current balance: %,.2f€%n", balance);

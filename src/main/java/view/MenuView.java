@@ -1,23 +1,23 @@
 package view;
 
-import service.BankService;
+import service.AccountService;
+import service.ClientService;
+import service.OperationService;
 
 import java.util.Scanner;
 
 public class MenuView {
-    private final BankService bankService;
     private final Scanner scanner;
 
     private final ClientView clientView;
     private final AccountView accountView;
     private final OperationView operationView;
 
-    public MenuView(BankService bankService, Scanner scanner) {
-        this.bankService = bankService;
+    public MenuView(ClientService clientService,OperationService operationService, AccountService accountService, Scanner scanner) {
         this.scanner = scanner;
-        this.clientView = new ClientView(bankService,scanner);
-        this.accountView = new AccountView(bankService,scanner);
-        this.operationView = new OperationView(bankService,scanner);
+        this.clientView = new ClientView(clientService,scanner);
+        this.accountView = new AccountView(clientService,accountService,scanner);
+        this.operationView = new OperationView(operationService,scanner);
     }
 
     public void displayMainMenu() {
