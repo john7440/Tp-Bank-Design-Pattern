@@ -66,7 +66,7 @@ L'application suit une **architecture multi-couches** :
 
 **Couche Service**
 - Implementation de la logique métier
-- Gestion des transarctions
+- Gestion des transactions
 - Application des règles métier
 - Gestion des exceptions
 
@@ -208,7 +208,7 @@ Ajouter dans votre `pom.xml` :
 
 Le diagramme de classes complet est disponible dans le dossier `docs/` :
 - **Source PlantUML** : `ClassDiagram.puml`
-- **Image PNG** : `TP_Bank_v2.png`
+- **Image PNG** : `TP_Bank_v3.png`
 
 #### Relations Clés
 
@@ -226,8 +226,8 @@ Le diagramme de classes complet est disponible dans le dossier `docs/` :
 
 **Couches de l'Architzcture :**
 - ConsoleApp → MenuView → Views
-- Views → BankService
-- BankService → DAOs
+- Views → Services
+- Services → DAOs
 - DAOs → DatabaseConnection
 
 ## Licence
