@@ -171,26 +171,33 @@ OperationDao .up[bold,dashed,thickness=2].> Operation
 ' SERVICE PACKAGE
 
 package "Service" <<service>> {
-    class BankService {
+    class ClientService {
         - clientDao: ClientDao
-        - accountDao: AccountDao
-        - operationDao: OperationDao
         --
         + getAllClients(): List<Client>
         + findClientById(id: Long): Client
-        + getClientAccounts(clientId: Long): List<Account>
-        + findAccountByNumber(number: String): Account
-        + getBalance(accountNumber: String): double
-        + deposit(accountNumber: String, amount: double): void
-        + withdraw(accountNumber: String, amount: double): void
-        + getAccountHistory(accountNumber: String): List<Operation>
-        + displayAccountHistory(accountNumber: String): void
+    }
+    class AccountService{
+        - accountDao: AccountDao
+        - clientService: ClientService
+        --
+        + getClientsAccount(clientId: Long)
+        + findAccountByNumber(accountNumber: String)
+        + getBalance(accountNumber: String)
+    }
+    class OperationService{
+        - operationDao: OperationDao
+        - accountDao: AccountDao
+        - accountService: AccountService
+        + deposit(accountNumber: String,amount: double)
+        + withdraw(accountNumber: String,amount: double)
+        + displayAccountHistory(accountNumber: String)
     }
 }
 
-BankService -[bold]-> ClientDao
-BankService -[bold]-> AccountDao
-BankService -[bold]-> OperationDao
+ClientService -[bold]-> ClientDao
+AccountService -[bold]-> AccountDao
+OperationService -[bold]-> OperationDao
 
 ' ------------------------
 ' EXCEPTION PACKAGE
@@ -232,7 +239,9 @@ package "Exception" <<exception>> {
 
 }
 
-BankService .[bold,dashed,thickness=2].> BusinessException : <<throws>>
+AccountService .[bold,dashed,thickness=2].> BusinessException : <<throws>>
+ClientService .[bold,dashed,thickness=2].> BusinessException : <<throws>>
+OperationService .[bold,dashed,thickness=2].> BusinessException : <<throws>>
 DatabaseConnection .right.> DatabaseConnectionException
 
 ' -------------------------------------
@@ -244,7 +253,7 @@ package "View" <<view>> {
     }
 
     class ClientView {
-        - bankService: BankService
+        - clientService: ClientService
         - scanner: Scanner
         --
         + display(): void
@@ -253,7 +262,8 @@ package "View" <<view>> {
     }
 
     class AccountView {
-        - bankService: BankService
+        - clientService: ClientService
+        - accountService: AccountService
         - scanner: Scanner
         --
         + display(): void
@@ -262,7 +272,7 @@ package "View" <<view>> {
     }
 
     class OperationView {
-        - bankService: BankService
+        - operationService: OperationService
         - scanner: Scanner
         --
         + display(): void
@@ -272,7 +282,6 @@ package "View" <<view>> {
     }
 
     class MenuView {
-        - bankService: BankService
         - scanner: Scanner
         - clientView: ClientView
         - accountView: AccountView
@@ -293,15 +302,15 @@ MenuView -left-> ClientView
 MenuView -left-> AccountView
 MenuView -left-> OperationView
 
-ClientView -[bold]-> BankService
-AccountView -[bold]-> BankService
-OperationView -[bold]-> BankService
+ClientView -[bold]-> ClientService
+AccountView -[bold]-> AccountService
+OperationView -[bold]-> OperationService
+AccountView -[bold]-> ClientService
 
 ' ------------------------------------
 ' MAIN
 package "Main" <<main>> {
     class ConsoleApp <<Application>> {
-        - {static} bankService: BankService
         - {static} scanner: Scanner
         - {static} menuView: MenuView
         --
@@ -310,7 +319,10 @@ package "Main" <<main>> {
 }
 
 ConsoleApp -up[bold]-> MenuView
-ConsoleApp -down[bold]-> BankService
+ConsoleApp -down[bold]-> AccountService
+ConsoleApp -down[bold]-> ClientService
+ConsoleApp -down[bold]-> OperationService
+
 
 
 @enduml
