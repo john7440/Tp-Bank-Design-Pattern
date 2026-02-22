@@ -1,15 +1,19 @@
 import database.DatabaseConnection;
 import exception.AccountNotFoundException;
 import exception.InsufficientBalanceException;
-import service.BankService;
+import service.AccountService;
+import service.ClientService;
+import service.OperationService;
 import view.MenuView;
 
 import java.util.Scanner;
 
 public class ConsoleApp {
-    private static final BankService bankService = new BankService();
+    private static final AccountService accountService = new AccountService();
+    private static final ClientService clientService = new ClientService();
+    private static final OperationService operationService = new OperationService();
     private static final Scanner scanner = new Scanner(System.in);
-    private static final MenuView menuView = new MenuView(bankService, scanner);
+    private static final MenuView menuView = new MenuView(clientService,operationService,accountService, scanner);
 
     public static void main(String[] args) {
         displayWelcomeBanner();
